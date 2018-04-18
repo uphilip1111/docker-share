@@ -1,0 +1,47 @@
+version: '3.0'
+services:
+    redis-m1:
+        build:
+            context: ./redis
+            dockerfile: Dockerfile
+        restart: always
+        volumes:
+            - ./m1_data:/data
+        image: "redis-sentinel"
+        networks:
+            app_net:
+                ipv4_address: 172.48.0.10
+        container_name: redis-m1
+    redis-r1:
+        build:
+            context: ./redis
+            dockerfile: Dockerfile
+        restart: always
+        volumes:
+            - ./r1_data:/data
+        image: "redis-sentinel"
+        networks:
+            app_net:
+                ipv4_address: 172.48.0.11
+        container_name: redis-r1
+    redis-r2:
+        build:
+            context: ./redis
+            dockerfile: Dockerfile
+        restart: always
+        volumes:
+            - ./r2_data:/data
+        image: "redis-sentinel"
+        networks:
+            app_net:
+                ipv4_address: 172.48.0.12
+        container_name: redis-r2
+
+networks:
+    app_net:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+            -
+              subnet: 172.48.0.0/24
