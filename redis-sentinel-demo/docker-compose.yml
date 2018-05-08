@@ -6,8 +6,9 @@ services:
             dockerfile: Dockerfile
         restart: always
         volumes:
-            - ./m1_data:/data
+            - ./configs/m1-redis.conf:/etc/redis/redis.conf
         image: "redis-sentinel"
+        command: redis-server /etc/redis/redis.conf
         networks:
             app_net:
                 ipv4_address: 172.48.0.10
@@ -18,8 +19,11 @@ services:
             dockerfile: Dockerfile
         restart: always
         volumes:
-            - ./r1_data:/data
+            - ./configs/r-redis.conf:/etc/redis/redis.conf
         image: "redis-sentinel"
+        depends_on:
+            - "redis-m1"
+        command: redis-server /etc/redis/redis.conf
         networks:
             app_net:
                 ipv4_address: 172.48.0.11
@@ -30,12 +34,57 @@ services:
             dockerfile: Dockerfile
         restart: always
         volumes:
-            - ./r2_data:/data
+            - ./configs/r-redis.conf:/etc/redis/redis.conf
         image: "redis-sentinel"
+        depends_on:
+            - "redis-m1"
+        command: redis-server /etc/redis/redis.conf
         networks:
             app_net:
                 ipv4_address: 172.48.0.12
         container_name: redis-r2
+    sentinel-1:
+        build:
+            context: ./redis
+            dockerfile: Dockerfile
+        restart: always
+        image: "redis-sentinel"
+        depends_on:
+            - "redis-m1"
+            - "redis-r2"
+        command: redis-server /etc/redis/sentinel.conf --sentinel
+        networks:
+            app_net:
+                ipv4_address: 172.48.0.13
+        container_name: s-1
+    sentinel-2:
+        build:
+            context: ./redis
+            dockerfile: Dockerfile
+        restart: always
+        image: "redis-sentinel"
+        depends_on:
+            - "redis-m1"
+            - "redis-r2"
+        command: redis-server /etc/redis/sentinel.conf --sentinel
+        networks:
+            app_net:
+                ipv4_address: 172.48.0.14
+        container_name: s-2
+    sentinel-3:
+        build:
+            context: ./redis
+            dockerfile: Dockerfile
+        restart: always
+        image: "redis-sentinel"
+        depends_on:
+            - "redis-m1"
+            - "redis-r2"
+        command: redis-server /etc/redis/sentinel.conf --sentinel
+        networks:
+            app_net:
+                ipv4_address: 172.48.0.15
+        container_name: s-3
 
 networks:
     app_net:

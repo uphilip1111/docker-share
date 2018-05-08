@@ -33,6 +33,7 @@ COPY ./configs/redis.service /etc/systemd/system/redis.service
 COPY ./configs/sysctl.conf /etc/sysctl.conf
 COPY ./configs/rc.local /etc/rc.local
 COPY ./configs/redis.4.0.2.conf /etc/redis/redis.conf
+COPY ./configs/sentinel.conf /etc/redis/sentinel.conf
 
 # Define mountable directories.
 VOLUME ["/data"]
@@ -41,7 +42,7 @@ VOLUME ["/data"]
 WORKDIR /data
 
 # Define default command.
-CMD ["redis-server", "/etc/redis/redis.conf"]
+#CMD ["redis-server", "/etc/redis/redis.conf"]
 
 # Expose ports.
-EXPOSE 6379
+EXPOSE 6379 26379
