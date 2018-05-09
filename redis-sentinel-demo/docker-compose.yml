@@ -19,7 +19,7 @@ services:
             dockerfile: Dockerfile
         restart: always
         volumes:
-            - ./configs/r-redis.conf:/etc/redis/redis.conf
+            - ./configs/r1-redis.conf:/etc/redis/redis.conf
         image: "redis-sentinel"
         depends_on:
             - "redis-m1"
@@ -34,7 +34,7 @@ services:
             dockerfile: Dockerfile
         restart: always
         volumes:
-            - ./configs/r-redis.conf:/etc/redis/redis.conf
+            - ./configs/r2-redis.conf:/etc/redis/redis.conf
         image: "redis-sentinel"
         depends_on:
             - "redis-m1"
